@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="James McMahon" />
+
+
+<title>Working with CHI numbers</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Working with CHI numbers</h1>
+<h4 class="author">James McMahon</h4>
+
+
+
+<div id="checking-and-correcting-chi-numbers" class="section level2">
+<h2>Checking and correcting CHI numbers</h2>
+<p>The first thing you should do when working with CHI numbers of
+unknown quality is to check their validity. phsmethods provides a
+function to easily do this: <code>chi_check()</code> - This function
+expects a character vector (1 or more), it will then return a value for
+each CHI number letting you know if it’s valid, and if it isn’t what the
+issue is.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>chi_numbers <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="st">&quot;0211165794&quot;</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="st">&quot;9999999999&quot;</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="st">&quot;402070763&quot;</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="st">&quot;00402070763&quot;</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  <span class="st">&quot;0101010000&quot;</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  <span class="st">&quot;Missing CHI&quot;</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  <span class="cn">NA</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>  <span class="st">&quot;&quot;</span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>)</span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="fu">library</span>(phsmethods)</span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="fu">chi_check</span>(chi_numbers)</span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Valid CHI&quot;                    &quot;Invalid date&quot;                </span></span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a><span class="co">#&gt; [3] &quot;Too few characters&quot;           &quot;Too many characters&quot;         </span></span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a><span class="co">#&gt; [5] &quot;Invalid checksum&quot;             &quot;Invalid character(s) present&quot;</span></span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a><span class="co">#&gt; [7] &quot;Missing (NA)&quot;                 &quot;Missing (Blank)&quot;</span></span></code></pre></div>
+<div id="cleaning-up-bad-chi-numbers" class="section level3">
+<h3>Cleaning up bad CHI numbers</h3>
+<p>Usually, we will have the CHI as a variable in some data.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">chi =</span> <span class="fu">c</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>  <span class="st">&quot;0211165794&quot;</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>  <span class="st">&quot;9999999999&quot;</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>  <span class="st">&quot;402070763&quot;</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>  <span class="st">&quot;00402070763&quot;</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>  <span class="st">&quot;0101010000&quot;</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>  <span class="st">&quot;Missing CHI&quot;</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>  <span class="cn">NA</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>  <span class="st">&quot;&quot;</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>))</span></code></pre></div>
+<p>It looks like one of the CHI numbers ‘402070763’ might have just lost
+a leading zero, this is a common occurrence if the data has passed
+through Excel at some point. We can fix this specific issue with
+<code>chi_pad()</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>fixed_data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">chi =</span> <span class="fu">chi_pad</span>(chi))</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>checked_data <span class="ot">&lt;-</span> fixed_data <span class="sc">%&gt;%</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">valid_chi =</span> <span class="fu">chi_check</span>(chi))</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>checked_data</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; # A tibble: 8 × 2</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt;   chi           valid_chi                   </span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;         &lt;chr&gt;                       </span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; 1 &quot;0211165794&quot;  Valid CHI                   </span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; 2 &quot;9999999999&quot;  Invalid date                </span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; 3 &quot;0402070763&quot;  Valid CHI                   </span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; 4 &quot;00402070763&quot; Too many characters         </span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; 5 &quot;0101010000&quot;  Invalid checksum            </span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; 6 &quot;Missing CHI&quot; Invalid character(s) present</span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; 7  &lt;NA&gt;         Missing (NA)                </span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt; 8 &quot;&quot;            Missing (Blank)</span></span></code></pre></div>
+<p>On a larger dataset, it might be useful to get a count of the issues
+rather than seeing them per CHI.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>fixed_data <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">count</span>(<span class="at">valid_chi =</span> <span class="fu">chi_check</span>(chi), <span class="at">sort =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt; # A tibble: 7 × 2</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt;   valid_chi                        n</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;                        &lt;int&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt; 1 Valid CHI                        2</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt; 2 Invalid character(s) present     1</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt; 3 Invalid checksum                 1</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt; 4 Invalid date                     1</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt; 5 Missing (Blank)                  1</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt; 6 Missing (NA)                     1</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt; 7 Too many characters              1</span></span></code></pre></div>
+<p>Now we have this knowledge we have a few options. Which option we
+take will depend on the type and purpose of the analysis as well as how
+many CHI numbers have issues.</p>
+<ol style="list-style-type: decimal">
+<li>Go back to the data source/provider and try to fix the erroneous CHI
+numbers.</li>
+<li>Set them as NA so we keep the rest of the data.</li>
+<li>Filter the data with invalid CHIs out completely.</li>
+</ol>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>fixed_data <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">chi =</span> <span class="fu">if_else</span>(<span class="fu">chi_check</span>(chi) <span class="sc">!=</span> <span class="st">&quot;Valid CHI&quot;</span>, <span class="cn">NA_character_</span>, chi))</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt; # A tibble: 8 × 1</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt;   chi       </span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;     </span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co">#&gt; 1 0211165794</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt; 2 &lt;NA&gt;      </span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt; 3 0402070763</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt; 4 &lt;NA&gt;      </span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt; 5 &lt;NA&gt;      </span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt; 6 &lt;NA&gt;      </span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt; 7 &lt;NA&gt;      </span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt; 8 &lt;NA&gt;</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a>fixed_data <span class="sc">%&gt;%</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">chi_check</span>(chi) <span class="sc">==</span> <span class="st">&quot;Valid CHI&quot;</span>)</span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 1</span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt;   chi       </span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;     </span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; 1 0211165794</span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt; 2 0402070763</span></span></code></pre></div>
+</div>
+</div>
+<div id="inferring-data-from-a-chi-number" class="section level2">
+<h2>Inferring data from a CHI number</h2>
+<p>In an ideal world, we would always have supplementary data such as
+Date of Birth, Age and Sex alongside the CHI number, however, we often
+work with data where we only have the CHI number and the other
+demographic variables are either completely missing or incomplete.</p>
+<p>Once we have checked and (if necessary) padded the CHI numbers, we
+can then try and extract some information from them.</p>
+<div id="the-structure-of-a-chi-number" class="section level4">
+<h4>The structure of a CHI number</h4>
+<p>As explained in this <a href="https://en.wikipedia.org/wiki/National_Health_Service_Central_Register#Community_Health_Index">Wikipedia
+article</a> a CHI number is constructed as follows: * The first 6 digits
+are the patient’s Date of Birth in the format <code>DDMMYY</code>. *
+Digits 7 and 8 are random. * The 9<sup>th</sup> number indicates the
+patient’s sex - odd for male, even for female. * The final,
+10<sup>th</sup>, digit is a (Modulus-11) ‘check digit’ - This helps
+guard against transcription errors, for example, if someone makes a typo
+it is very unlikely that the check digit will still be valid.</p>
+</div>
+<div id="extracting-sex-from-chi" class="section level3">
+<h3>Extracting sex from CHI</h3>
+<p>With <code>sex_from_chi()</code> we can extract the infer and extract
+the patient’s sex. By default, the function will first check the CHI for
+validity and will return <code>NA</code> if a CHI is invalid.</p>
+<p>If you have already checked the CHI in a previous step it can be
+useful to use <code>chi_check = FALSE</code> as this will be faster.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="at">chi =</span> <span class="fu">c</span>(<span class="st">&quot;0101011237&quot;</span>, <span class="st">&quot;0211165794&quot;</span>, <span class="st">&quot;0402070763&quot;</span>, <span class="st">&quot;0101336489&quot;</span>, <span class="st">&quot;1904851231&quot;</span>, <span class="st">&quot;2902960018&quot;</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>)</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co"># Confirm all of the CHIs are valid</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="fu">count</span>(data, <span class="fu">chi_check</span>(chi))</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 2</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co">#&gt;   `chi_check(chi)`     n</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;            &lt;int&gt;</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co">#&gt; 1 Valid CHI            6</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>data_sex <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sex =</span> <span class="fu">sex_from_chi</span>(chi, <span class="at">chi_check =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>data_sex</span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 2</span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt;   chi          sex</span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;int&gt;</span></span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co">#&gt; 1 0101011237     1</span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co">#&gt; 2 0211165794     1</span></span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co">#&gt; 3 0402070763     2</span></span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="co">#&gt; 4 0101336489     2</span></span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="co">#&gt; 5 1904851231     1</span></span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a><span class="co">#&gt; 6 2902960018     1</span></span></code></pre></div>
+<p>By default sex will be returned as an integer with ‘1’ representing
+‘Male’ and ‘2’ representing ‘Female’, this is consistent with the <a href="https://www.ndc.scot.nhs.uk/Dictionary-A-Z/Definitions/index.asp?Search=S&amp;ID=1277&amp;Title=Sex">coding
+of sex</a> in other PHS datasets.</p>
+<p>We can have sex returned as a factor using
+<code>as_factor = TRUE</code>, which by default will have levels of ‘1’
+and ‘2’ and labels of ‘Male’ and ‘Female’ which can be useful,
+particularly when visualising the data.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>data_sex <span class="ot">&lt;-</span> data_sex <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sex_factor =</span> <span class="fu">sex_from_chi</span>(chi, <span class="at">as_factor =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>data_sex</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co">#&gt;   chi          sex sex_factor</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;int&gt; &lt;fct&gt;     </span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co">#&gt; 1 0101011237     1 Male      </span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="co">#&gt; 2 0211165794     1 Male      </span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#&gt; 3 0402070763     2 Female    </span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="co">#&gt; 4 0101336489     2 Female    </span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="co">#&gt; 5 1904851231     1 Male      </span></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co">#&gt; 6 2902960018     1 Male</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>data_sex <span class="sc">%&gt;%</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="st">&quot;&quot;</span>, <span class="at">fill =</span> sex_factor)) <span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>  <span class="fu">coord_polar</span>() <span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Count of Male vs Female&quot;</span>, <span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> <span class="st">&quot;&quot;</span>) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="st">&quot;Sex (from CHI)&quot;</span>, <span class="at">type =</span> <span class="st">&quot;qual&quot;</span>) <span class="sc">+</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="extracting-date-of-birth-from-chi" class="section level3">
+<h3>Extracting Date of Birth from CHI</h3>
+<p>It is usually not possible to definitively infer a patient’s Date of
+Birth from the CHI number, this is because the CHI only contains 2
+digits for the year. Looking at the first 6 digits of a CHI number
+‘010120’ could be ‘1 January 1920’ or ‘1 January 2020’. However, with
+some extra context, we can usually eliminate one of the possibilities,
+for example in 2023 we know that any CHI numbers of the form ‘DDMM24’
+etc. must mean 1924 since it can’t be 2024.</p>
+<p>The function <code>dob_from_chi()</code> will try to extract the Date
+of Birth and will return <code>NA</code> if the date is ambiguous.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>data_dob <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dob =</span> <span class="fu">dob_from_chi</span>(chi))</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co">#&gt; ! 3 CHI numbers produced ambiguous dates and will be given &quot;NA&quot; for their Dates</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt;   of Birth.</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co">#&gt; ✔ Try different values for `min_date` and/or `max_date`.</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>data_dob</span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 2</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co">#&gt;   chi        dob       </span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;date&gt;    </span></span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co">#&gt; 1 0101011237 NA        </span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="co">#&gt; 2 0211165794 NA        </span></span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co">#&gt; 3 0402070763 NA        </span></span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="co">#&gt; 4 0101336489 1933-01-01</span></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="co">#&gt; 5 1904851231 1985-04-19</span></span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="co">#&gt; 6 2902960018 1996-02-29</span></span></code></pre></div>
+<p>We will need to provide some more context to be able to work out the
+still missing dates. Often we will be working with historical data, for
+instance, if we know the data is from 2015 we know the patients must
+have been born earlier than that. We can use the <code>min_date</code>
+and <code>max_date</code> arguments to provide this context.</p>
+<ul>
+<li><code>min_date</code> will usually be some information from the
+data, it is the latest possible date that the CHI could have been
+born.</li>
+<li><code>max_date</code> will default to today’s date, it will usually
+be some common sense date about the latest date you’d expect. For
+instance, if working with childhood vaccine data you could use
+<code>Sys.Date() - lubridate::years(16)</code>, it to imply you don’t
+expect anyone older than 16 as of today’s date.</li>
+</ul>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># Expect no one born after 2015-12-31</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>data <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dob =</span> <span class="fu">dob_from_chi</span>(chi, <span class="at">max_date =</span> <span class="fu">as.Date</span>(<span class="st">&quot;2015-12-31&quot;</span>)))</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#&gt; ! 2 CHI numbers produced ambiguous dates and will be given &quot;NA&quot; for their Dates</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co">#&gt;   of Birth.</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co">#&gt; ✔ Try different values for `min_date` and/or `max_date`.</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 2</span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co">#&gt;   chi        dob       </span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;date&gt;    </span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co">#&gt; 1 0101011237 NA        </span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co">#&gt; 2 0211165794 1916-11-02</span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#&gt; 3 0402070763 NA        </span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co">#&gt; 4 0101336489 1933-01-01</span></span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co">#&gt; 5 1904851231 1985-04-19</span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co">#&gt; 6 2902960018 1996-02-29</span></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co"># Expect no one born before 1999-12-31 i.e. 16 years before our data started.</span></span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a>data <span class="sc">%&gt;%</span></span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dob =</span> <span class="fu">dob_from_chi</span>(</span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a>    chi,</span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a>    <span class="at">max_date =</span> <span class="fu">as.Date</span>(<span class="st">&quot;2015-12-31&quot;</span>),</span>
+<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a>    <span class="at">min_date =</span> <span class="fu">as.Date</span>(<span class="st">&quot;2015-12-31&quot;</span>) <span class="sc">-</span> lubridate<span class="sc">::</span><span class="fu">years</span>(<span class="dv">16</span>)</span>
+<span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a>  ))</span>
+<span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a><span class="co">#&gt; ! 4 CHI numbers produced ambiguous dates and will be given &quot;NA&quot; for their Dates</span></span>
+<span id="cb10-25"><a href="#cb10-25" tabindex="-1"></a><span class="co">#&gt;   of Birth.</span></span>
+<span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a><span class="co">#&gt; ✔ Try different values for `min_date` and/or `max_date`.</span></span>
+<span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 2</span></span>
+<span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a><span class="co">#&gt;   chi        dob       </span></span>
+<span id="cb10-29"><a href="#cb10-29" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;date&gt;    </span></span>
+<span id="cb10-30"><a href="#cb10-30" tabindex="-1"></a><span class="co">#&gt; 1 0101011237 2001-01-01</span></span>
+<span id="cb10-31"><a href="#cb10-31" tabindex="-1"></a><span class="co">#&gt; 2 0211165794 NA        </span></span>
+<span id="cb10-32"><a href="#cb10-32" tabindex="-1"></a><span class="co">#&gt; 3 0402070763 2007-02-04</span></span>
+<span id="cb10-33"><a href="#cb10-33" tabindex="-1"></a><span class="co">#&gt; 4 0101336489 NA        </span></span>
+<span id="cb10-34"><a href="#cb10-34" tabindex="-1"></a><span class="co">#&gt; 5 1904851231 NA        </span></span>
+<span id="cb10-35"><a href="#cb10-35" tabindex="-1"></a><span class="co">#&gt; 6 2902960018 NA</span></span></code></pre></div>
+<p>Usually, we will have event dates e.g. an admission date alongside
+the data and this can be used instead of, or in conjunction with a fixed
+date.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">event_date =</span> <span class="fu">as.Date</span>(<span class="fu">c</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>    <span class="st">&quot;2015-01-01&quot;</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>    <span class="st">&quot;2014-01-01&quot;</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>    <span class="st">&quot;2013-01-01&quot;</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>    <span class="st">&quot;2012-01-01&quot;</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>    <span class="st">&quot;2011-01-01&quot;</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>    <span class="st">&quot;2010-01-01&quot;</span></span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>  )))</span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a><span class="co"># Using the event date as the maximum date</span></span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a>data <span class="sc">%&gt;%</span></span>
+<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dob =</span> <span class="fu">dob_from_chi</span>(chi, <span class="at">max_date =</span> event_date))</span>
+<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a><span class="co">#&gt; ! 2 CHI numbers produced ambiguous dates and will be given &quot;NA&quot; for their Dates</span></span>
+<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a><span class="co">#&gt;   of Birth.</span></span>
+<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a><span class="co">#&gt; ✔ Try different values for `min_date` and/or `max_date`.</span></span>
+<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a><span class="co">#&gt;   chi        event_date dob       </span></span>
+<span id="cb11-19"><a href="#cb11-19" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;date&gt;     &lt;date&gt;    </span></span>
+<span id="cb11-20"><a href="#cb11-20" tabindex="-1"></a><span class="co">#&gt; 1 0101011237 2015-01-01 NA        </span></span>
+<span id="cb11-21"><a href="#cb11-21" tabindex="-1"></a><span class="co">#&gt; 2 0211165794 2014-01-01 1916-11-02</span></span>
+<span id="cb11-22"><a href="#cb11-22" tabindex="-1"></a><span class="co">#&gt; 3 0402070763 2013-01-01 NA        </span></span>
+<span id="cb11-23"><a href="#cb11-23" tabindex="-1"></a><span class="co">#&gt; 4 0101336489 2012-01-01 1933-01-01</span></span>
+<span id="cb11-24"><a href="#cb11-24" tabindex="-1"></a><span class="co">#&gt; 5 1904851231 2011-01-01 1985-04-19</span></span>
+<span id="cb11-25"><a href="#cb11-25" tabindex="-1"></a><span class="co">#&gt; 6 2902960018 2010-01-01 1996-02-29</span></span>
+<span id="cb11-26"><a href="#cb11-26" tabindex="-1"></a></span>
+<span id="cb11-27"><a href="#cb11-27" tabindex="-1"></a><span class="co"># Setting a &#39;fixed&#39; minimum date as well as using the event date</span></span>
+<span id="cb11-28"><a href="#cb11-28" tabindex="-1"></a>data_dob <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb11-29"><a href="#cb11-29" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dob =</span> <span class="fu">dob_from_chi</span>(</span>
+<span id="cb11-30"><a href="#cb11-30" tabindex="-1"></a>    chi,</span>
+<span id="cb11-31"><a href="#cb11-31" tabindex="-1"></a>    <span class="at">max_date =</span> event_date,</span>
+<span id="cb11-32"><a href="#cb11-32" tabindex="-1"></a>    <span class="at">min_date =</span> <span class="fu">as.Date</span>(<span class="st">&quot;1915-01-01&quot;</span>)</span>
+<span id="cb11-33"><a href="#cb11-33" tabindex="-1"></a>  ))</span>
+<span id="cb11-34"><a href="#cb11-34" tabindex="-1"></a></span>
+<span id="cb11-35"><a href="#cb11-35" tabindex="-1"></a>data_dob</span>
+<span id="cb11-36"><a href="#cb11-36" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span id="cb11-37"><a href="#cb11-37" tabindex="-1"></a><span class="co">#&gt;   chi        event_date dob       </span></span>
+<span id="cb11-38"><a href="#cb11-38" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;date&gt;     &lt;date&gt;    </span></span>
+<span id="cb11-39"><a href="#cb11-39" tabindex="-1"></a><span class="co">#&gt; 1 0101011237 2015-01-01 2001-01-01</span></span>
+<span id="cb11-40"><a href="#cb11-40" tabindex="-1"></a><span class="co">#&gt; 2 0211165794 2014-01-01 1916-11-02</span></span>
+<span id="cb11-41"><a href="#cb11-41" tabindex="-1"></a><span class="co">#&gt; 3 0402070763 2013-01-01 2007-02-04</span></span>
+<span id="cb11-42"><a href="#cb11-42" tabindex="-1"></a><span class="co">#&gt; 4 0101336489 2012-01-01 1933-01-01</span></span>
+<span id="cb11-43"><a href="#cb11-43" tabindex="-1"></a><span class="co">#&gt; 5 1904851231 2011-01-01 1985-04-19</span></span>
+<span id="cb11-44"><a href="#cb11-44" tabindex="-1"></a><span class="co">#&gt; 6 2902960018 2010-01-01 1996-02-29</span></span></code></pre></div>
+</div>
+<div id="extracting-age-from-chi" class="section level3">
+<h3>Extracting age from CHI</h3>
+<p>The function <code>age_from_chi()</code> provides a simpler interface
+for just extracting a patient’s age from the CHI number. In the
+background, it uses <code>dob_from_chi()</code> but allows you to
+specify <code>min_age</code> and <code>max_age</code>, which are usually
+conceptually simpler than trying to work out dates. We do lose some
+amount of fine control here though, so it will sometimes be necessary to
+use <code>dob_from_chi()</code> and then
+<code>age_calculate()</code>.</p>
+<p>Note that age is calculated at <em>today’s</em> date unless otherwise
+specified with the <code>ref_date</code> argument.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>data <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">age_from_chi</span>(chi))</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="co">#&gt; ! 3 CHI numbers produced ambiguous dates and will be given &quot;NA&quot; for their Dates</span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co">#&gt;   of Birth.</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="co">#&gt; ✔ Try different values for `min_date` and/or `max_date`.</span></span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="co">#&gt;   chi        event_date   age</span></span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;date&gt;     &lt;dbl&gt;</span></span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a><span class="co">#&gt; 1 0101011237 2015-01-01    NA</span></span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a><span class="co">#&gt; 2 0211165794 2014-01-01    NA</span></span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a><span class="co">#&gt; 3 0402070763 2013-01-01    NA</span></span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a><span class="co">#&gt; 4 0101336489 2012-01-01    90</span></span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a><span class="co">#&gt; 5 1904851231 2011-01-01    38</span></span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="co">#&gt; 6 2902960018 2010-01-01    27</span></span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a><span class="co"># Work out age at a fixed date</span></span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a>data <span class="sc">%&gt;%</span></span>
+<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">age_from_chi</span>(chi, <span class="at">ref_date =</span> <span class="fu">as.Date</span>(<span class="st">&quot;2016-01-01&quot;</span>)))</span>
+<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a><span class="co">#&gt; ! 2 CHI numbers produced ambiguous dates and will be given &quot;NA&quot; for their Dates</span></span>
+<span id="cb12-20"><a href="#cb12-20" tabindex="-1"></a><span class="co">#&gt;   of Birth.</span></span>
+<span id="cb12-21"><a href="#cb12-21" tabindex="-1"></a><span class="co">#&gt; ✔ Try different values for `min_date` and/or `max_date`.</span></span>
+<span id="cb12-22"><a href="#cb12-22" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span id="cb12-23"><a href="#cb12-23" tabindex="-1"></a><span class="co">#&gt;   chi        event_date   age</span></span>
+<span id="cb12-24"><a href="#cb12-24" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;date&gt;     &lt;dbl&gt;</span></span>
+<span id="cb12-25"><a href="#cb12-25" tabindex="-1"></a><span class="co">#&gt; 1 0101011237 2015-01-01    NA</span></span>
+<span id="cb12-26"><a href="#cb12-26" tabindex="-1"></a><span class="co">#&gt; 2 0211165794 2014-01-01    99</span></span>
+<span id="cb12-27"><a href="#cb12-27" tabindex="-1"></a><span class="co">#&gt; 3 0402070763 2013-01-01    NA</span></span>
+<span id="cb12-28"><a href="#cb12-28" tabindex="-1"></a><span class="co">#&gt; 4 0101336489 2012-01-01    83</span></span>
+<span id="cb12-29"><a href="#cb12-29" tabindex="-1"></a><span class="co">#&gt; 5 1904851231 2011-01-01    30</span></span>
+<span id="cb12-30"><a href="#cb12-30" tabindex="-1"></a><span class="co">#&gt; 6 2902960018 2010-01-01    19</span></span>
+<span id="cb12-31"><a href="#cb12-31" tabindex="-1"></a></span>
+<span id="cb12-32"><a href="#cb12-32" tabindex="-1"></a><span class="co"># Work out age at a relative date</span></span>
+<span id="cb12-33"><a href="#cb12-33" tabindex="-1"></a>data <span class="sc">%&gt;%</span></span>
+<span id="cb12-34"><a href="#cb12-34" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">age_from_chi</span>(chi, <span class="at">ref_date =</span> event_date))</span>
+<span id="cb12-35"><a href="#cb12-35" tabindex="-1"></a><span class="co">#&gt; ! 2 CHI numbers produced ambiguous dates and will be given &quot;NA&quot; for their Dates</span></span>
+<span id="cb12-36"><a href="#cb12-36" tabindex="-1"></a><span class="co">#&gt;   of Birth.</span></span>
+<span id="cb12-37"><a href="#cb12-37" tabindex="-1"></a><span class="co">#&gt; ✔ Try different values for `min_date` and/or `max_date`.</span></span>
+<span id="cb12-38"><a href="#cb12-38" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span id="cb12-39"><a href="#cb12-39" tabindex="-1"></a><span class="co">#&gt;   chi        event_date   age</span></span>
+<span id="cb12-40"><a href="#cb12-40" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;date&gt;     &lt;dbl&gt;</span></span>
+<span id="cb12-41"><a href="#cb12-41" tabindex="-1"></a><span class="co">#&gt; 1 0101011237 2015-01-01    NA</span></span>
+<span id="cb12-42"><a href="#cb12-42" tabindex="-1"></a><span class="co">#&gt; 2 0211165794 2014-01-01    97</span></span>
+<span id="cb12-43"><a href="#cb12-43" tabindex="-1"></a><span class="co">#&gt; 3 0402070763 2013-01-01    NA</span></span>
+<span id="cb12-44"><a href="#cb12-44" tabindex="-1"></a><span class="co">#&gt; 4 0101336489 2012-01-01    79</span></span>
+<span id="cb12-45"><a href="#cb12-45" tabindex="-1"></a><span class="co">#&gt; 5 1904851231 2011-01-01    25</span></span>
+<span id="cb12-46"><a href="#cb12-46" tabindex="-1"></a><span class="co">#&gt; 6 2902960018 2010-01-01    13</span></span></code></pre></div>
+<p>We will get different results depending on which context we
+supply.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>data <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">age_from_chi</span>(chi, <span class="at">ref_date =</span> event_date, <span class="at">max_age =</span> <span class="dv">18</span>))</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="co">#&gt; ! 3 CHI numbers produced ambiguous dates and will be given &quot;NA&quot; for their Dates</span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a><span class="co">#&gt;   of Birth.</span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a><span class="co">#&gt; ✔ Try different values for `min_date` and/or `max_date`.</span></span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co">#&gt;   chi        event_date   age</span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;date&gt;     &lt;dbl&gt;</span></span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a><span class="co">#&gt; 1 0101011237 2015-01-01    14</span></span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a><span class="co">#&gt; 2 0211165794 2014-01-01    NA</span></span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="co">#&gt; 3 0402070763 2013-01-01     5</span></span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="co">#&gt; 4 0101336489 2012-01-01    NA</span></span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a><span class="co">#&gt; 5 1904851231 2011-01-01    NA</span></span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a><span class="co">#&gt; 6 2902960018 2010-01-01    13</span></span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a></span>
+<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a>data <span class="sc">%&gt;%</span></span>
+<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">age_from_chi</span>(</span>
+<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a>    chi,</span>
+<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a>    <span class="at">ref_date =</span> event_date,</span>
+<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a>    <span class="at">min_age =</span> <span class="dv">60</span>,</span>
+<span id="cb13-21"><a href="#cb13-21" tabindex="-1"></a>    <span class="at">max_age =</span> <span class="dv">120</span></span>
+<span id="cb13-22"><a href="#cb13-22" tabindex="-1"></a>  ))</span>
+<span id="cb13-23"><a href="#cb13-23" tabindex="-1"></a><span class="co">#&gt; ! 2 CHI numbers produced ambiguous dates and will be given &quot;NA&quot; for their Dates</span></span>
+<span id="cb13-24"><a href="#cb13-24" tabindex="-1"></a><span class="co">#&gt;   of Birth.</span></span>
+<span id="cb13-25"><a href="#cb13-25" tabindex="-1"></a><span class="co">#&gt; ✔ Try different values for `min_date` and/or `max_date`.</span></span>
+<span id="cb13-26"><a href="#cb13-26" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span id="cb13-27"><a href="#cb13-27" tabindex="-1"></a><span class="co">#&gt;   chi        event_date   age</span></span>
+<span id="cb13-28"><a href="#cb13-28" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;date&gt;     &lt;dbl&gt;</span></span>
+<span id="cb13-29"><a href="#cb13-29" tabindex="-1"></a><span class="co">#&gt; 1 0101011237 2015-01-01   114</span></span>
+<span id="cb13-30"><a href="#cb13-30" tabindex="-1"></a><span class="co">#&gt; 2 0211165794 2014-01-01    97</span></span>
+<span id="cb13-31"><a href="#cb13-31" tabindex="-1"></a><span class="co">#&gt; 3 0402070763 2013-01-01   105</span></span>
+<span id="cb13-32"><a href="#cb13-32" tabindex="-1"></a><span class="co">#&gt; 4 0101336489 2012-01-01    79</span></span>
+<span id="cb13-33"><a href="#cb13-33" tabindex="-1"></a><span class="co">#&gt; 5 1904851231 2011-01-01    NA</span></span>
+<span id="cb13-34"><a href="#cb13-34" tabindex="-1"></a><span class="co">#&gt; 6 2902960018 2010-01-01    NA</span></span>
+<span id="cb13-35"><a href="#cb13-35" tabindex="-1"></a></span>
+<span id="cb13-36"><a href="#cb13-36" tabindex="-1"></a>data <span class="sc">%&gt;%</span></span>
+<span id="cb13-37"><a href="#cb13-37" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">age_from_chi</span>(</span>
+<span id="cb13-38"><a href="#cb13-38" tabindex="-1"></a>    chi,</span>
+<span id="cb13-39"><a href="#cb13-39" tabindex="-1"></a>    <span class="at">min_age =</span> <span class="dv">60</span>,</span>
+<span id="cb13-40"><a href="#cb13-40" tabindex="-1"></a>    <span class="at">max_age =</span> <span class="dv">120</span></span>
+<span id="cb13-41"><a href="#cb13-41" tabindex="-1"></a>  ))</span>
+<span id="cb13-42"><a href="#cb13-42" tabindex="-1"></a><span class="co">#&gt; ! 3 CHI numbers produced ambiguous dates and will be given &quot;NA&quot; for their Dates</span></span>
+<span id="cb13-43"><a href="#cb13-43" tabindex="-1"></a><span class="co">#&gt;   of Birth.</span></span>
+<span id="cb13-44"><a href="#cb13-44" tabindex="-1"></a><span class="co">#&gt; ✔ Try different values for `min_date` and/or `max_date`.</span></span>
+<span id="cb13-45"><a href="#cb13-45" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span id="cb13-46"><a href="#cb13-46" tabindex="-1"></a><span class="co">#&gt;   chi        event_date   age</span></span>
+<span id="cb13-47"><a href="#cb13-47" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;date&gt;     &lt;dbl&gt;</span></span>
+<span id="cb13-48"><a href="#cb13-48" tabindex="-1"></a><span class="co">#&gt; 1 0101011237 2015-01-01    NA</span></span>
+<span id="cb13-49"><a href="#cb13-49" tabindex="-1"></a><span class="co">#&gt; 2 0211165794 2014-01-01   107</span></span>
+<span id="cb13-50"><a href="#cb13-50" tabindex="-1"></a><span class="co">#&gt; 3 0402070763 2013-01-01   116</span></span>
+<span id="cb13-51"><a href="#cb13-51" tabindex="-1"></a><span class="co">#&gt; 4 0101336489 2012-01-01    90</span></span>
+<span id="cb13-52"><a href="#cb13-52" tabindex="-1"></a><span class="co">#&gt; 5 1904851231 2011-01-01    NA</span></span>
+<span id="cb13-53"><a href="#cb13-53" tabindex="-1"></a><span class="co">#&gt; 6 2902960018 2010-01-01    NA</span></span></code></pre></div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
