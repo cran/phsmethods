@@ -1,6 +1,6 @@
-c08e85f124c8330b9868a2427d272dbb *DESCRIPTION
+f97f18e8588f00babb4f15027f533f32 *DESCRIPTION
 17c77116a29918090265a4d85cde4b7c *NAMESPACE
-396526bd0511c3ef684cfc1aa8f17b02 *NEWS.md
+1743e90ff600b34c39e7177a0bd9b0b0 *NEWS.md
 b039d552ccb6cd3bb5ce7b3dfbe65cd1 *R/age_calculate.R
 5d1d6e1e93b625d943c025345c82c81e *R/chi_check.R
 f4f7a0e3214b3405bb8d846b339f321d *R/chi_pad.R
@@ -22,7 +22,7 @@ c16d5adbe128f775b56e4ceca4956a7f *README.md
 e65bd9ca924afe0eed76ac57160fdd0b *inst/WORDLIST
 b2f53ee2bc81c5e0e7753390609c9cc0 *inst/doc/chi-operations.R
 886a546c143e1f05a199f53824180141 *inst/doc/chi-operations.Rmd
-c76a22d0b619247aaf78619bc4c625e7 *inst/doc/chi-operations.html
+e6833de3de3c82ccc3d13e10d6c64ae6 *inst/doc/chi-operations.html
 e786182d1a3ca54febe7c26b8fbefd2f *man/age_calculate.Rd
 9fc34bd366e1ecc7771f6f0e4a19cdc2 *man/age_from_chi.Rd
 44397001f0235bed8e7849942719fe11 *man/area_lookup.Rd
@@ -67,7 +67,7 @@ b3252778f1421d77d7c24d3d79d8b916 *tests/testthat/test-age_calculate.R
 dcf97a993162828f85309e9bbd4743d2 *tests/testthat/test-chi_check.R
 6d4e4b3490f0f9b69ad31cd4b7cdabd2 *tests/testthat/test-chi_pad.R
 addb89a6d4e1b7caef02427744150622 *tests/testthat/test-create_age_groups.R
-9dbeea4969aceeb6b0ba5a86ea365038 *tests/testthat/test-dob_from_chi.R
+aabe0134c95e3bf46bbd2d151cbd5dbb *tests/testthat/test-dob_from_chi.R
 41d3f7107c710e59b4fa14ff9cd5c318 *tests/testthat/test-extract_fin_year.R
 80de7ed248238acb99464ba7332bab8b *tests/testthat/test-file_size.R
 c5d1c6a9e79eb01b9880e5c573893e6c *tests/testthat/test-format_postcode.R

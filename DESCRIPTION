@@ -1,6 +1,6 @@
 Package: phsmethods
 Title: Standard Methods for Use in Public Health Scotland
-Version: 1.0.1
+Version: 1.0.2
 Authors@R: c(
     person("Public Health Scotland", , , "phs.datascience@phs.scot", role = "cph"),
     person("David", "Caldwell", , "David.Caldwell@phs.scot", role = "aut"),
@@ -40,7 +40,7 @@ LazyData: true
 RoxygenNote: 7.2.3
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2023-11-28 16:10:04 UTC; yuyanf01
+Packaged: 2024-01-08 14:30:34 UTC; yuyanf01
 Author: Public Health Scotland [cph],
   David Caldwell [aut],
   Lucinda Lawrie [rev],
@@ -56,4 +56,4 @@ Author: Public Health Scotland [cph],
   Nicolaos Christofidis [aut]
 Maintainer: Tina Fu <Yuyan.Fu2@phs.scot>
 Repository: CRAN
-Date/Publication: 2023-11-28 16:50:02 UTC
+Date/Publication: 2024-01-08 23:10:03 UTC
